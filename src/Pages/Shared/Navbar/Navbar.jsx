@@ -22,6 +22,10 @@ const Navbar = () => {
       <li><NavLink className='font-bold'>About Us</NavLink></li>
       <li><NavLink to='/sendpercel' className='font-bold'>Send Percel</NavLink></li>
       <li><NavLink to='/coverage' className='font-bold'>Coverage</NavLink></li>
+
+      {user && <>
+      <li><NavLink to='/dashboard/mypercels' className='font-bold'>My Percel</NavLink></li>
+      </>}
   </>
 
   return (

@@ -7,6 +7,8 @@ import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
 import PrivetRoutes from "./PrivetRoutes";
 import SendPercel from "../Pages/SendPercel/SendPercel";
+import Dashboard from "../Layouts/Dashboard";
+import MyPercel from "../Pages/Dashboard/MyPercel";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,19 @@ const router = createBrowserRouter([
         path: '/register',
         element: <Register/>
       },
+    ]
+  },
+
+  {
+    path:'/dashboard',
+    element: <PrivetRoutes>
+      <Dashboard/>
+    </PrivetRoutes>,
+    children:[
+      {
+        path:'mypercels',
+        element: <MyPercel/>
+      }
     ]
   }
 ]);
