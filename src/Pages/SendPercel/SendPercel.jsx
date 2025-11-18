@@ -1,54 +1,87 @@
 import React from 'react';
-import { useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useLoaderData } from 'react-router';
+import Swal from 'sweetalert2';
+import useAxiosSecure from '../../Hook/useAxiosSecure';
+import useAuth from '../../Hook/useAuth';
 
 const SendPercel = () => {
 
-    const { register, handleSubmit,watch,formState: { errors } } = useForm()
+    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+
+    //! axios secure 
+    const axiosSecure = useAxiosSecure()
+
+    //! user
+    const { user } = useAuth()
+
 
     const serviceCenter = useLoaderData();
-  
-    const duplicateRegion = serviceCenter.map( s => s.region )
+
+    const duplicateRegion = serviceCenter.map(s => s.region)
 
     const region = [...new Set(duplicateRegion)]
 
-    const senderRegion =watch('senderRegion')
+    const senderRegion = watch('senderRegion')
     const receiverRegion = watch('receiverRegion')
-    
-   const regionBaseDistrict = (region) => {
-        const allDataByRegion = serviceCenter.filter(data => data.region === region)
-        const district = allDataByRegion.map(d => d.district) 
-        return district
-   }
 
-   
+    const regionBaseDistrict = (region) => {
+        const allDataByRegion = serviceCenter.filter(data => data.region === region)
+        const district = allDataByRegion.map(d => d.district)
+        return district
+    }
+
+
     // handleSendPercel function
     const handleSendPercel = (data) => {
-       const isDocument = data.percelType === 'document'
-       const isSameDistrict = data.senderDistrict === data.receiverDistrict
-       const percelWeights = parseFloat(data.percelWeight)
-       let cost = 0;
+        const isDocument = data.percelType === 'document'
+        const isSameDistrict = data.senderDistrict === data.receiverDistrict
+        const percelWeights = parseFloat(data.percelWeight)
+        let cost = 0;
 
-       if(isDocument){
-        cost = isSameDistrict ? 60 : 80; 
-       }
-       else {
-        if(percelWeights < 3){
-            cost = isSameDistrict ? 110 : 150
+        if (isDocument) {
+            cost = isSameDistrict ? 60 : 80;
         }
         else {
-            const minCharge = isSameDistrict ? 110 : 150;
-            const extraWeight = percelWeights - 3
-            const extraCharge = isSameDistrict ? extraWeight * 40 : extraWeight * 40 + 40
-            cost = minCharge + extraCharge
+            if (percelWeights < 3) {
+                cost = isSameDistrict ? 110 : 150
+            }
+            else {
+                const minCharge = isSameDistrict ? 110 : 150;
+                const extraWeight = percelWeights - 3
+                const extraCharge = isSameDistrict ? extraWeight * 40 : extraWeight * 40 + 40
+                cost = minCharge + extraCharge
+            }
         }
-       }
 
-       console.log('cost ', cost)
+        Swal.fire({
+            title: "Agree with the Cost ?",
+            text: `You will be charged ${cost} taka`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "I Agree"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                axiosSecure.post(`/percels`, data)
+                    .then(res => {
+                        console.log('after saving percels', res.data)
+                    })
+
+
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
 
     }
- 
-    
+
+
 
     return (
         <div className='my-10 max-w-[1500px] mx-auto'>
@@ -86,8 +119,8 @@ const SendPercel = () => {
                         <label className="label font-bold text-secondary text-[18px]">Sender Name</label>
                         <input type="text" {...register('senderName')} className="input w-full" placeholder="Sender Name" />
 
-                         <label className="label font-bold text-secondary text-[18px]">Sender Email</label>
-                        <input type="email" {...register('senderEmail')} className="input w-full" placeholder="Sender Email" />
+                        <label className="label font-bold text-secondary text-[18px]">Sender Email</label>
+                        <input defaultValue={user?.email} type="email" {...register('senderEmail')} className="input w-full" placeholder="Sender Email" />
 
 
                         <label className="label font-bold text-secondary text-[18px]">Sender Address</label>
@@ -99,21 +132,21 @@ const SendPercel = () => {
                         <label className="label font-bold text-secondary text-[18px]">Your Region</label>
                         <select defaultValue="Select Your Region" {...register('senderRegion')} className="select w-full">
                             <option disabled={true}>Select Your Region</option>
-                           {
-                            region.map((r,i) =>
-                                <option key={i} value={r}>{r}</option> 
-                            )
-                           }
+                            {
+                                region.map((r, i) =>
+                                    <option key={i} value={r}>{r}</option>
+                                )
+                            }
                         </select>
-                        
+
                         <label className="label font-bold text-secondary text-[18px]">Your District</label>
                         <select defaultValue="Select Your District" {...register('senderDistrict')} className="select w-full">
-                            <option disabled={true}>Select Your District</option>    
+                            <option disabled={true}>Select Your District</option>
                             {
-                                regionBaseDistrict(senderRegion).map((d,i) => 
+                                regionBaseDistrict(senderRegion).map((d, i) =>
                                     <option key={i} value={d}>{d}</option>
                                 )
-                            }                       
+                            }
                         </select>
 
                         <label className="label font-bold text-secondary text-[18px]">Pickup Instruction</label>
@@ -126,7 +159,7 @@ const SendPercel = () => {
                         <input type="text" {...register('receiverlName')} className="input w-full" placeholder="Receiver Name" />
 
                         <label className="label font-bold text-secondary text-[18px]">Receiver Email</label>
-                        <input type="email" {...register('senderEmail')} className="input w-full" placeholder="Receiver Email" />
+                        <input type="email" {...register('receiverEmail')} className="input w-full" placeholder="Receiver Email" />
 
                         <label className="label font-bold text-secondary text-[18px]">Receiver Address</label>
                         <input type="text" {...register('receiverAddress')} className="input w-full" placeholder="Receiver Address" />
@@ -138,20 +171,20 @@ const SendPercel = () => {
                         <select defaultValue="Select Receiver Region" {...register('receiverRegion')} className="select w-full">
                             <option disabled={true}>Select Receiver Region</option>
                             {
-                                region.map((r,i) => 
-                                <option key={i} value={r}>{r}</option>
+                                region.map((r, i) =>
+                                    <option key={i} value={r}>{r}</option>
                                 )
                             }
                         </select>
-                        
+
                         <label className="label font-bold text-secondary text-[18px]">Receiver District</label>
                         <select defaultValue="Select Receiver District" {...register('receiverDistrict')} className="select w-full">
                             <option disabled={true}>Select Receiver District</option>
-                           {
-                            regionBaseDistrict(receiverRegion).map((d,i) => 
-                                <option key={i} value={d}>{d}</option>
-                            )
-                           }
+                            {
+                                regionBaseDistrict(receiverRegion).map((d, i) =>
+                                    <option key={i} value={d}>{d}</option>
+                                )
+                            }
                         </select>
 
                         <label className="label font-bold text-secondary text-[18px]">Pickup Instruction</label>
