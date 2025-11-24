@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../Hook/useAxiosSecure';
 import useAuth from '../../Hook/useAuth';
@@ -15,7 +15,7 @@ const SendPercel = () => {
     //! user
     const { user } = useAuth()
 
-
+    const navigate = useNavigate()
     const serviceCenter = useLoaderData();
 
     const duplicateRegion = serviceCenter.map(s => s.region)
@@ -54,6 +54,8 @@ const SendPercel = () => {
             }
         }
 
+        data.cost = cost
+
         Swal.fire({
             title: "Agree with the Cost ?",
             text: `You will be charged ${cost} taka`,
@@ -61,21 +63,28 @@ const SendPercel = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "I Agree"
+            confirmButtonText: "Confirm and Continue Payment"
         }).then((result) => {
             if (result.isConfirmed) {
 
                 axiosSecure.post(`/percels`, data)
                     .then(res => {
                         console.log('after saving percels', res.data)
+
+                        if (res.data.insertedId) {
+                             navigate('/dashboard/mypercels')
+                    Swal.fire({
+                       
+                        position: "top-end",
+                        icon: "success",
+                        title: "Your parcel has been  Created",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+
+
                     })
-
-
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success"
-                });
             }
         });
 

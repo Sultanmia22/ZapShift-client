@@ -1,4 +1,7 @@
 import React from 'react';
+import { FaRegCreditCard } from 'react-icons/fa';
+import { FcApproval } from 'react-icons/fc';
+import { MdOutlineLocalShipping } from 'react-icons/md';
 import { Link, Outlet } from 'react-router';
 
 const Dashboard = () => {
@@ -16,7 +19,7 @@ const Dashboard = () => {
                 </nav>
                 {/* Outlet */}
                 <div>
-                    <Outlet/>
+                    <Outlet />
                 </div>
             </div>
 
@@ -33,10 +36,33 @@ const Dashboard = () => {
                                 <span className="is-drawer-close:hidden">Homepage</span>
                             </Link>
                         </li>
-                        
-                        {/* MY Dashboard links */}
+
+                        {/* MY percels links */}
                         <li>
-                            <Link to='/dashboard/percel'>Percel</Link>
+                            <Link to='mypercels' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Percel">
+                                {/* pecel icon */}
+                                <MdOutlineLocalShipping size={18} />
+                                <span className="is-drawer-close:hidden">Percel</span>
+                            </Link>
+                        </li>
+
+
+                        {/* MY Payment history links */}
+                        <li>
+                            <Link to='payment-history' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="payment history">
+                                {/* histoy icon */}
+                                <FaRegCreditCard size={18} />
+                                <span className="is-drawer-close:hidden">Payment History</span>
+                            </Link>
+                        </li>
+
+                        {/* Approve Riders */}
+                        <li>
+                            <Link to='approveRider' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Approve Riders">
+                                {/* riders icon */}
+                                <FcApproval size={18} />
+                                <span className="is-drawer-close:hidden">Approve Riders</span>
+                            </Link>
                         </li>
 
                         {/* List item */}

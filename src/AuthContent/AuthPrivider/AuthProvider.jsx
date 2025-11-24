@@ -3,25 +3,25 @@ import { AuthContext } from '../AuthContext/AuthContext';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../../Firebase/firebase.config';
 const Googleprovider = new GoogleAuthProvider();
-const AuthProvider = ({children}) => {
-    const [loading,setLoading] = useState(true)
-    const [user,setUser] = useState(null)
+const AuthProvider = ({ children }) => {
+    const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState(null)
 
     //! Creat User 
-    const creatUser = (email,password) => {
-        return createUserWithEmailAndPassword(auth,email,password)
+    const creatUser = (email, password) => {
+        return createUserWithEmailAndPassword(auth, email, password)
     }
 
     //! Sign in User 
-    const signInUser = (email,password) => {
+    const signInUser = (email, password) => {
         setLoading(true)
-        return signInWithEmailAndPassword(auth,email,password)
+        return signInWithEmailAndPassword(auth, email, password)
     }
 
     //! sign in google 
     const googleSignIn = () => {
         setLoading(true)
-        return signInWithPopup(auth,Googleprovider)
+        return signInWithPopup(auth, Googleprovider)
     }
 
     //! Sign Out User 
@@ -31,12 +31,12 @@ const AuthProvider = ({children}) => {
 
     //! Update Profile 
     const updateUserProfile = (profile) => {
-        return updateProfile(auth.currentUser,profile)
+        return updateProfile(auth.currentUser, profile)
     }
 
     //! user observe 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth,(currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser)
             setLoading(false)
         })
@@ -44,7 +44,7 @@ const AuthProvider = ({children}) => {
         return () => {
             unsubscribe()
         }
-    },[])
+    }, [])
 
     const authInfo = {
         creatUser,
@@ -57,9 +57,9 @@ const AuthProvider = ({children}) => {
     }
 
     return (
-       <AuthContext value={authInfo}>
-        {children}
-       </AuthContext>
+        <AuthContext value={authInfo}>
+            {children}
+        </AuthContext>
     );
 };
 
