@@ -17,7 +17,7 @@ const HistoryPayment = () => {
         
     })
 
-    console.log(history)
+    // console.log(history)
 
     if (isLoading) {
         return <div className='text-center'> <p>Loading...</p> </div>

@@ -69,7 +69,8 @@ const SendPercel = () => {
 
                 axiosSecure.post(`/percels`, data)
                     .then(res => {
-                        console.log('after saving percels', res.data)
+                        
+                        // console.log('after saving percels', res.data)
 
                         if (res.data.insertedId) {
                              navigate('/dashboard/mypercels')

@@ -23,7 +23,7 @@ const GoogleSign = () => {
 
                 axiosSecure.post('/users', userInfo)
                     .then(res => {
-                        console.log('user data has been stored', res.data)
+                        // console.log('user data has been stored', res.data)
                     })
             })
             .catch(er => {

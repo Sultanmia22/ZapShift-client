@@ -15,6 +15,14 @@ import CancelPayment from "../Pages/Dashboard/CancelPayment";
 import HistoryPayment from "../Pages/Dashboard/PaymentHistory/HistoryPayment";
 import Rider from "../Pages/Rider/Rider";
 import ApproveRiders from "../Pages/Dashboard/ApproveRiders/ApproveRiders";
+import UsersManagement from "../Pages/UserManagement/UsersManagement";
+import AdminRoutes from "./AdminRoutes";
+import AssignRiders from "../Pages/Dashboard/AssignRiders/AssignRiders";
+import RiderRoutes from "./RiderRoutes";
+import AssignDelivary from "../Pages/Dashboard/AssignDelivary/AssignDelivary";
+import CompletedDelivary from "../Pages/Dashboard/CompletedDelivary/CompletedDelivary";
+import PercelTrack from "../Pages/PercelTrack/PercelTrack";
+import DashboardHome from "../Pages/Dashboard/DashboradHome/DashboardHome";
 
 const router = createBrowserRouter([
   {
@@ -40,8 +48,13 @@ const router = createBrowserRouter([
       {
         path: '/rider',
         element: <PrivetRoutes>
-          <Rider/>
+          <Rider />
         </PrivetRoutes>
+      },
+
+      {
+        path: '/percel-track/:trackingId',
+        element: <PercelTrack/>
       }
     ]
   },
@@ -68,6 +81,12 @@ const router = createBrowserRouter([
       <Dashboard />
     </PrivetRoutes>,
     children: [
+
+      {
+        index: true,
+        element: <DashboardHome/>
+      },
+
       {
         path: 'mypercels',
         element: <MyPercel />
@@ -93,8 +112,38 @@ const router = createBrowserRouter([
       },
 
       {
-        path:'approveRider',
-        element: <ApproveRiders/>
+        path: 'approveRider',
+        element: <AdminRoutes>
+          <ApproveRiders />
+        </AdminRoutes>
+      },
+
+      {
+        path: 'users-management',
+        element: <AdminRoutes>
+          <UsersManagement />
+        </AdminRoutes>
+      },
+
+      {
+        path: 'assign-riders',
+        element: <AdminRoutes>
+          <AssignRiders />
+        </AdminRoutes>
+      },
+
+      {
+        path: 'assign-delivary',
+        element: <RiderRoutes>
+          <AssignDelivary />
+        </RiderRoutes>
+      },
+
+      {
+        path: 'completed-delivery',
+        element: <RiderRoutes>
+          <CompletedDelivary/>
+        </RiderRoutes>
       }
 
     ]

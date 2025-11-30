@@ -81,6 +81,7 @@ const ApproveRiders = () => {
                             <th>Email</th>
                             <th>District</th>
                             <th>Status</th>
+                            <th>Work Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -94,6 +95,7 @@ const ApproveRiders = () => {
                                     <td>{rider.email}</td>
                                     <td> {rider.district} </td>
                                     <td className={`${rider.status == 'approved' ? 'text-green-500' : 'text-yellow-600'}`}> {rider.status} </td>
+                                    <td>{rider.workStatus}</td>
                                     <td className='space-x-2'>
                                         <button onClick={() => handleApproval(rider)} className='btn'><FaUserCheck /></button>
                                         <button onClick={() => handleRejection(rider)} className='btn'><IoPersonRemoveSharp /></button>

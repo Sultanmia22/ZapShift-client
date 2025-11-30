@@ -2,18 +2,19 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../Hook/useAuth';
 import GoogleSign from './GoogleSign';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const Login = () => {
     const {register,handleSubmit} = useForm()
     const {signInUser} = useAuth()
-
+    const navigate = useNavigate()
 
     const handleLogin = (data) => {
         signInUser(data.email,data.password)
         .then(res => {
             const user = res.user;
-            console.log(user)
+            // console.log(user)
+            navigate('/')
         })
         .catch(er => {
             const error = er

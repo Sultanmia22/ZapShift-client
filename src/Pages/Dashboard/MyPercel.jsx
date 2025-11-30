@@ -11,21 +11,23 @@ import { Link } from 'react-router';
 
 
 const MyPercel = () => {
- 
+
     const { user } = useAuth()
     const axiosSecure = useAxiosSecure()
 
-    const { data: percels, isLoading, error ,refetch} = useQuery({
-        queryKey: ['mypercels', user?.email],
+    const { data: percels, isLoading, isError, refetch } = useQuery({
+        queryKey: ['mypercel', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/percels?email=${user?.email}`)
-            return res.data
+            return res.data;
         }
     })
 
+
     //! Handle Delete 
     const handleDelete = (id) => {
-        console.log(id)
+
+        // console.log(id)
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -36,7 +38,7 @@ const MyPercel = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                
+
                 axiosSecure.delete(`/percel/${id}`)
                     .then(res => {
                         if (res.data.deletedCount) {
@@ -54,19 +56,30 @@ const MyPercel = () => {
 
     //! handle percel payment 
 
-
-        const handlePayment =async (percel) => {
-            const paymentInfo = {
-                cost:percel.cost,
-                percelName:percel.percelName,
-                percelId : percel._id,
-                senderEmail: percel.senderEmail,
-            }
-
-            const res = await axiosSecure.post(`/create-checkout-session`,paymentInfo)
-            window.location.assign(res.data.url)
+    const handlePayment = async (percel) => {
+        const paymentInfo = {
+            percelName: percel.percelName,
+            cost: percel.cost,
+            percelId: percel._id,
+            senderEmail: percel.senderEmail,
         }
 
+        const res = await axiosSecure.post('/create-checkout-session', paymentInfo)
+        window.location.assign(res.data.url)
+    }
+
+    /*    const handlePayment = async (percel) => {
+           const paymentInfo = {
+               cost: percel.cost,
+               percelName: percel.percelName,
+               percelId: percel._id,
+               senderEmail: percel.senderEmail,
+           }
+   
+           const res = await axiosSecure.post(`/create-checkout-session`, paymentInfo)
+           window.location.assign(res.data.url)
+       }
+    */
     if (isLoading) {
         return <div> <p>Loading...</p> </div>
     }
@@ -82,6 +95,7 @@ const MyPercel = () => {
                         <th>cost</th>
                         <th>Date</th>
                         <th>Payment</th>
+                        <th>Tracking Id</th>
                         <th>Dalevary Status</th>
                         <th>action</th>
                     </tr>
@@ -98,16 +112,23 @@ const MyPercel = () => {
                                 <td>{percel.createdAt}</td>
                                 <td>
                                     {
-                                        percel.paymentStatus === 'paid' ? 
-                                         
-                                        <span className='text-green-400'>Paid</span> 
-                                        : 
-                                       
-                                        <button onClick={() => handlePayment(percel)} className='btn btn-sm btn-primary text-black'> Pay </button>
-                                       
+                                        percel.paymentStatus === 'paid' ?
+
+                                            <span className='text-green-400'>Paid</span>
+                                            :
+
+                                            <button onClick={() => handlePayment(percel)} className='btn btn-sm btn-primary text-black'> Pay </button>
+
                                     }
                                 </td>
-                                <td>{percel.dalevaryStatus}</td>
+
+                                <td>
+                                    <Link to={`/percel-track/${percel.trackingId}`}>
+                                        {percel.trackingId}
+                                    </Link>
+                                </td>
+
+                                <td>{percel.delivaryStatus}</td>
                                 <td>
                                     <button className='btn btn-square ml-2'> <FaSearch /></button>
                                     <button className='btn btn-square ml-2'> <FiEdit /> </button>

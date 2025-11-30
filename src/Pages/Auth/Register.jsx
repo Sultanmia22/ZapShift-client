@@ -17,11 +17,13 @@ const Register = () => {
 
         const profileImg = data.photo[0]
 
-        console.log(profileImg)
+        // console.log(profileImg)
+
         creatUser(data.email, data.password)
             .then(res => {
+                
                 const user = res.user;
-                console.log(user)
+                // console.log(user)
 
                 const formData = new FormData();
                 formData.append('image', profileImg)
@@ -38,10 +40,10 @@ const Register = () => {
                             displayName: data.name,
                             photoURL: photoURL,
                         }
-                        axiosSecure.post('/users',userInfo)
-                        .then(res => {
-                           
-                        })
+                        axiosSecure.post('/users', userInfo)
+                            .then(res => {
+
+                            })
 
                         const profileUser = {
                             displayName: data.name,
@@ -57,7 +59,7 @@ const Register = () => {
                             })
                     })
 
-                    navigate('/')
+                navigate('/')
             })
 
             .catch(er => {

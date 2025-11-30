@@ -1,37 +1,29 @@
 import { useSearchParams } from "react-router";
 import useAxiosSecure from "../../Hook/useAxiosSecure";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 
 
 const SuccessPayment = () => { 
 
-    /* const [searchParams] = useSearchParams()
-    const sessionId = searchParams.get('session_id')
-    const axiosSecure = useAxiosSecure()
-    const [paymentInfo,setPaymentInfo] = useState({})
-    
-    useEffect(() => {
-        if(sessionId){
-            axiosSecure.patch(`/success-payment?session_id=${sessionId}`)
-            .then(res => {
-                console.log(res.data)
-                setPaymentInfo({
-                    transactionId: res.data.transactionId,
-                    trackingId:res.data.trackingId,
-                })
-            })
-        }
-    },[sessionId,axiosSecure])
- */
      const [searchParams] = useSearchParams()
      const sessionId = searchParams.get('session_id');
      const axiosSecure = useAxiosSecure()
      const [payment,setPayment] = useState({})
 
+     const hasVerified = useRef(false)
+
      useEffect(() => {
+
+        if(hasVerified.current){
+            return
+        }
+
         if(sessionId){
+
+            hasVerified.current = true;
+            
             axiosSecure.patch(`/success-payment?session_id=${sessionId}`)
             .then(res => {
                 setPayment({
@@ -42,7 +34,7 @@ const SuccessPayment = () => {
         }
      },[axiosSecure,sessionId])
 
-    console.log(sessionId)
+    // console.log(sessionId)
 
     return (
         <div>

@@ -27,7 +27,7 @@ const useAxiosSecure = () => {
             },
 
             (err) => {
-                console.log(err)
+                // console.log(err)
                 const errorStatusCode = err.status
 
                 if (errorStatusCode === 401 || errorStatusCode === 403) {

@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import riderImg from '../../assets/agent-pending.png'
 import { useForm } from 'react-hook-form';
 import useAxiosSecure from '../../Hook/useAxiosSecure';
 import Swal from 'sweetalert2';
+import useAuth from '../../Hook/useAuth';
 const Rider = () => {
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+    const {user} = useAuth()
+    const { register, handleSubmit, watch, formState: { errors },setValue } = useForm()
     const axiosSecure = useAxiosSecure()
+
+
+    useEffect(() => {
+    if (user) {
+      setValue("name", user.displayName || "");
+      setValue("email", user.email || "");
+    }
+  }, [user, setValue]);
 
     //! handle Submit Rider function 
     const handleSubmitRider = (data) => {
@@ -38,11 +48,11 @@ const Rider = () => {
                         <fieldset className="fieldset sender-details">
                             {/* Name  */}
                             <label className="label font-bold text-secondary text-[18px]">Your Name</label>
-                            <input type="text" {...register('name')} className="input w-full" placeholder="Your Name" />
+                            <input defaultValue={user?.displayName} type="text" {...register('name')} className="input w-full" placeholder="Your Name" />
 
                             {/* Your Email  */}
                             <label className="label font-bold text-secondary text-[18px]">Your Email</label>
-                            <input type="email" {...register('email')} className="input w-full" placeholder="Your Email" />
+                            <input  type="email" {...register('email')} className="input w-full" placeholder="Your Email" />
 
                             {/* Your NID  */}
                             <label className="label font-bold text-secondary text-[18px]">Your NID</label>
@@ -69,7 +79,7 @@ const Rider = () => {
 
                             {/* Your Driving Lisence  */}
                             <label className="label font-bold text-secondary text-[18px]">Your License No.</label>
-                            <input type="number" {...register('contact')} className="input w-full" placeholder="Your License" />
+                            <input type="text" {...register('contact')} className="input w-full" placeholder="Your License" />
 
 
                         </fieldset>

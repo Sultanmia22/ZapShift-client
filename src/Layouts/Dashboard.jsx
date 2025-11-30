@@ -1,10 +1,16 @@
 import React from 'react';
-import { FaRegCreditCard } from 'react-icons/fa';
+import { FaBoxOpen, FaRegCreditCard, FaTruckMoving, FaUser, FaUsers } from 'react-icons/fa';
 import { FcApproval } from 'react-icons/fc';
-import { MdOutlineLocalShipping } from 'react-icons/md';
+import { MdAssignmentAdd, MdAssignmentReturned, MdOutlineLocalShipping } from 'react-icons/md';
 import { Link, Outlet } from 'react-router';
+import useRole from '../Hook/useRole';
+import { RiEBike2Fill } from 'react-icons/ri';
 
 const Dashboard = () => {
+
+    const { role } = useRole()
+
+
     return (
         <div className="drawer lg:drawer-open">
             <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -30,7 +36,7 @@ const Dashboard = () => {
                     <ul className="menu w-full grow">
                         {/* List item */}
                         <li>
-                            <Link to='/' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
+                            <Link to='/dashboard' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
                                 {/* Home icon */}
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
                                 <span className="is-drawer-close:hidden">Homepage</span>
@@ -41,7 +47,7 @@ const Dashboard = () => {
                         <li>
                             <Link to='mypercels' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Percel">
                                 {/* pecel icon */}
-                                <MdOutlineLocalShipping size={18} />
+                                <FaBoxOpen size={18} />
                                 <span className="is-drawer-close:hidden">Percel</span>
                             </Link>
                         </li>
@@ -56,14 +62,70 @@ const Dashboard = () => {
                             </Link>
                         </li>
 
-                        {/* Approve Riders */}
-                        <li>
-                            <Link to='approveRider' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Approve Riders">
-                                {/* riders icon */}
-                                <FcApproval size={18} />
-                                <span className="is-drawer-close:hidden">Approve Riders</span>
-                            </Link>
-                        </li>
+                        {/* Rider Routes */}
+
+                        {
+                            (role.role === 'rider' || role.role === 'admin') && (
+                                <>
+                                <li>
+                                    <Link
+                                        to="assign-delivary"
+                                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                                        data-tip="assigned-delivary"
+                                    >
+                                        <MdAssignmentReturned size={18}/>
+                                        <span className="is-drawer-close:hidden">Assigned Delivery</span>
+                                    </Link>
+                                </li>
+
+
+                                  <li>
+                                    <Link
+                                        to="completed-delivery"
+                                        className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                                        data-tip="Completed Delivery"
+                                    >
+                                        <FaTruckMoving size={18} />
+                                        <span className="is-drawer-close:hidden">Completed Delivery</span>
+                                    </Link>
+                                </li>
+                                </>
+                            )
+                        }
+
+                        {/* Admin routes */}
+                        {
+                            role.role === 'admin' && <>
+                                {/* Approve Riders */}
+                                <li>
+                                    <Link to='approveRider' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Approve Riders">
+                                        {/* riders icon */}
+                                        <FcApproval size={18} />
+                                        <span className="is-drawer-close:hidden">Approve Riders</span>
+                                    </Link>
+                                </li>
+
+                                {/* Users management */}
+                                <li>
+                                    <Link to='users-management' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Users Management">
+                                        {/* User icon */}
+                                        <FaUsers size={18} />
+                                        <span className="is-drawer-close:hidden">Users Managment</span>
+                                    </Link>
+                                </li>
+
+                                {/* Assing Riders */}
+                                <li>
+                                    <Link to='assign-riders' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Assign Riders">
+                                        {/* User icon */}
+                                        <MdAssignmentAdd size={18} />
+                                        <span className="is-drawer-close:hidden">Assign Riders</span>
+                                    </Link>
+                                </li>
+                            </>
+                        }
+
+
 
                         {/* List item */}
                         <li>
